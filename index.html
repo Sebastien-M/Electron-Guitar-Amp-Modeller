@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Hello World!</title>
+</head>
+
+<body>
+
+    <select id="selectform">
+    </select>
+    <button id="inputchoice">Choose input</button>
+    <audio controls style="display:none;">
+        <source>
+    </audio>
+    <script type="text/javascript">
+        let choice = document.querySelector("#inputchoice");
+        let select = document.querySelector("#selectform");
+        let deviceId;
+
+        navigator.mediaDevices.enumerateDevices()
+            .then((devices) => {
+                for (let i = 0; i < devices.length; i++) {
+                    if (devices[i].kind === "audioinput") {
+                        console.log(devices[i]);
+                        // tab[i].textContent = devices[i].label;
+                        let opt = document.createElement("option");
+                        opt.textContent = devices[i].label;
+                        opt.value = devices[i].deviceId;
+                        document.querySelector("#selectform").appendChild(opt);
+                    }
+                }
+            });
+
+
+        choice.addEventListener('click', function (e) {
+            // console.log(select.value);
+            // deviceId = select.value;
+        })
+
+        var constraints = {
+            audio: {
+                deviceId: { exact: "cc3cf0341f218022cad8b03233b3e73d969daf8bdcee247047dc23721d555e0b" }, 
+                video: false
+            }
+        };
+        // var video = document.querySelector('video');
+        var audio = document.querySelector("source");
+        function successCallback(stream) {
+            window.stream = stream; // stream available to console
+            if (window.URL) {
+                // video.src = window.URL.createObjectURL(stream);
+                audio.src = window.URL.createObjectURL(stream);
+                // console.log(stream);
+            } else {
+                // video.src = stream;
+                audio.src = stream;
+            }
+        }
+        function errorCallback(error) {
+            console.log('navigator.getUserMedia error: ', error);
+        }
+        navigator.getUserMedia(constraints, successCallback, errorCallback);
+    </script>
+</body>
+
+</html>
